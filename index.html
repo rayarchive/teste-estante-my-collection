@@ -3,146 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estante Widget - Versão Final</title>
+    <title>Estante Widget - Restauração Completa</title>
     <style>
         :root {
-            --shelf-bg: #0d0d0d; 
-            --shelf-border: #141414; 
-            --shelf-divider: #1a1a1a; 
+            --shelf-bg: #0d0d0d;
+            --shelf-border: #1a1a1a;
+            --shelf-divider: #252525;
+            --shelf-gradient-start: #050505;
+            --shelf-gradient-end: #161616;
             --text-color: white;
+            --panel-bg: #151515;
+            --panel-border: #333;
+            --input-bg: #222;
         }
 
-        /* Reset para evitar barras de rolagem estranhas */
-        html, body { 
-            margin: 0; padding: 0; 
-            background-color: transparent !important; 
-            overflow: hidden; 
-            font-family: 'Segoe UI', sans-serif; 
+        html, body {
+            margin: 0; padding: 0;
+            background-color: transparent !important;
+            font-family: 'Segoe UI', sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
         }
 
-        .furniture-wrapper { 
-            width: 100%; 
-            max-width: 100%;
-            margin: 0 auto;
-            display: flex; 
+        .furniture-wrapper {
+            width: 95%;
+            margin: 30px auto 0 auto; /* Espaço para o topo aparecer */
+            display: flex;
             flex-direction: column;
-            box-sizing: border-box;
-            padding: 10px;
+            align-items: center;
         }
 
-        /* TOPO DA ESTANTE */
-        .shelf-top-crown {
+        /* O TOPO QUE VOCÊ GOSTA */
+        .bookshelf-container {
+            width: 100%;
+            background-color: var(--shelf-bg);
+            border: 15px solid var(--shelf-border);
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .bookshelf-container::before {
+            content: '';
+            position: absolute;
+            top: -25px;
+            left: -15px;
+            right: -15px;
             height: 25px;
             background: var(--shelf-border);
             border-radius: 4px 4px 0 0;
-            width: 100%;
-            box-sizing: border-box;
-            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
-        /* CORPO DA ESTANTE */
-        .bookshelf-container { 
-            width: 100%; 
-            background-color: var(--shelf-bg); 
-            border-left: 12px solid var(--shelf-border); 
-            border-right: 12px solid var(--shelf-border);
-            box-sizing: border-box;
-            display: flex; 
-            flex-direction: column; 
-        }
-
-        /* PRATELEIRAS */
-        .shelf-row { 
-            height: 155px; /* Altura ajustada para não cortar lombadas */
-            border-bottom: 15px solid var(--shelf-divider); 
-            display: flex; 
-            align-items: flex-end; 
-            padding: 0 10px; 
-            background: linear-gradient(to bottom, #050505, #121212); 
-            box-sizing: border-box;
-            position: relative;
-        }
-
-        /* REMOVE A BORDA DA ÚLTIMA PRATELEIRA PARA ELA ENCOSTAR NO PÉ */
-        .shelf-row:last-child {
-            border-bottom: none;
-        }
-
-        /* PÉS / RODAPÉ (Corrigido para não sobrar pros lados) */
-        .shelf-footer-base { 
-            width: 100%; 
-            height: 45px; 
-            background: var(--shelf-border); 
-            border-radius: 0 0 4px 4px;
+        /* AS PRATELEIRAS */
+        .shelf-row {
+            height: 145px; /* Altura aumentada para as prateleiras */
+            border-bottom: 12px solid var(--shelf-divider);
+            display: flex;
+            align-items: flex-end;
+            padding: 0 8px;
+            background: linear-gradient(to bottom, var(--shelf-gradient-start), var(--shelf-gradient-end));
             position: relative;
             box-sizing: border-box;
         }
 
-        /* BOTÃO SECRETO */
-        #secret-btn { 
-            position: absolute; right: 0; bottom: 0; 
-            width: 50px; height: 100%; 
-            opacity: 0; cursor: pointer; border: none; background: transparent; 
+        /* OS PÉS (RODAPÉ) AJUSTADOS */
+        .shelf-footer {
+            width: 100%; /* Corrigido para não sobrar para os lados */
+            height: 55px;
+            background: var(--shelf-border);
+            border-radius: 0 0 6px 6px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.6);
+            position: relative;
+            margin-top: -1px; 
+            z-index: 5;
         }
 
-        /* LIVROS */
-        .book, a.book-link { 
-            margin-right: 2px; 
-            background-size: 100% 100%; 
-            border-radius: 1px; 
-            box-shadow: 2px 0 5px rgba(0,0,0,0.8); 
-            transition: transform 0.2s; 
-            display: block; 
+        #secret-btn {
+            position: absolute; right: 0; bottom: 0;
+            width: 60px; height: 100%;
+            opacity: 0; cursor: pointer; border: none; background: transparent;
+        }
+
+        .book, a.book-link {
+            margin-right: 2px;
+            background-size: 100% 100%;
+            border-radius: 1px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.9);
+            transition: transform 0.2s;
+            display: block;
             text-decoration: none;
         }
         .book:hover, a.book-link:hover { transform: scale(1.05) translateY(-5px); z-index: 10; }
 
         /* PAINEL ADMINISTRATIVO */
-        #admin-panel { display: none; background: #1a1a1a; color: white; padding: 15px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; max-height: 80vh; overflow-y: auto; border-bottom: 3px solid #333; }
-        .input-group { display: flex; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
-        input, textarea { padding: 8px; border-radius: 4px; border: 1px solid #444; background: #222; color: white; width: 100%; box-sizing: border-box; }
+        #admin-panel { display: none; background: var(--panel-bg); padding: 15px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; max-height: 80vh; overflow-y: auto; border-bottom: 2px solid var(--panel-border); }
+        .input-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+        input, textarea { padding: 8px; background: var(--input-bg); border: 1px solid #444; color: white; border-radius: 4px; width: 100%; box-sizing: border-box; }
         .btn-action { padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; }
     </style>
 </head>
 <body>
 
     <div id="admin-panel">
-        <h3 style="margin:0 0 10px 0">Configurações da Estante</h3>
+        <h3>Configurações da Estante</h3>
         <div class="input-group">
             <input type="text" id="seriesName" placeholder="Série">
-            <input type="number" id="volNumber" placeholder="Vol" style="width: 60px;">
+            <input type="number" id="volNumber" placeholder="Vol" style="width: 70px;">
         </div>
         <div class="input-group">
-            <input type="text" id="imgUrl" placeholder="Link da Imagem (GitHub)">
-        </div>
-        <div class="input-group">
-            <input type="text" id="pageLink" placeholder="Link Destino (Opcional)">
+            <input type="text" id="imgUrl" placeholder="URL da Imagem">
         </div>
         <div class="input-group">
             <button class="btn-action" style="background:#388E3C; flex: 1;" onclick="addBook()">Adicionar</button>
-            <button class="btn-action" style="background:#555;" onclick="togglePanel()">Fechar</button>
+            <button class="btn-action" style="background:#666;" onclick="togglePanel()">Fechar</button>
         </div>
-        
-        <div id="active-book-list" style="margin-top:15px; max-height: 150px; overflow-y: auto; border: 1px solid #333; padding: 5px;"></div>
-
-        <div style="margin-top:15px; border-top: 1px solid #444; padding-top:10px;">
-            <label style="font-size:11px;">BACKUP (Base64):</label>
-            <textarea id="backupText" style="height:50px; font-size:10px;"></textarea>
-            <button class="btn-action" style="background:#2196F3; width:100%; margin-top:5px;" onclick="generateBackupCode()">Gerar/Copiar Backup</button>
+        <div id="active-book-list"></div>
+        <div style="margin-top:20px; border-top: 1px solid #444; padding-top:10px;">
+            <textarea id="backupText" placeholder="Código de backup..."></textarea>
+            <button class="btn-action" style="background:#2196F3; width:100%; margin-top:5px;" onclick="generateBackupCode()">Gerar Backup</button>
             <button class="btn-action" style="background:#FF9800; width:100%; margin-top:5px;" onclick="restoreBackupCode()">Restaurar Backup</button>
         </div>
     </div>
 
     <div class="furniture-wrapper">
-        <div class="shelf-top-crown"></div>
         <div class="bookshelf-container" id="bookshelf">
-            <div class="shelf-row"></div>
-            <div class="shelf-row"></div>
-            <div class="shelf-row"></div>
-            <div class="shelf-row"></div>
-            <div class="shelf-row"></div>
-        </div>
-        <div class="shelf-footer-base">
+            </div>
+        <div class="shelf-footer">
             <button id="secret-btn" onclick="togglePanel()"></button>
         </div>
     </div>
@@ -150,7 +141,7 @@
     <script>
         const STORAGE_KEY = 'myMangaShelf_PAGINA_B';
         let myBooks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-        const PIXELS_PER_CM = 5.8; 
+        const PIXELS_PER_CM = 5.5; 
 
         function togglePanel() {
             const p = document.getElementById('admin-panel');
@@ -165,16 +156,22 @@
         }
 
         function addBook() {
-            const series = document.getElementById('seriesName').value.trim();
-            const vol = parseInt(document.getElementById('volNumber').value) || 0;
-            const url = document.getElementById('imgUrl').value.trim();
-            let link = document.getElementById('pageLink').value.trim();
-            if (!series || !url) return;
-            if (link && !link.startsWith('http')) link = 'https://' + link;
-            
-            myBooks.push({ series, vol, url, link, h_cm: 19.5, w_cm: 1.5, id: Date.now() });
+            const series = document.getElementById('seriesName').value;
+            const vol = document.getElementById('volNumber').value;
+            const url = document.getElementById('imgUrl').value;
+            if(!series || !url) return;
+            myBooks.push({series, vol, url, h_cm:19.5, w_cm:1.5, id:Date.now()});
             saveAndRender();
-            document.getElementById('volNumber').value = vol + 1;
+        }
+
+        function renderBookList() {
+            const list = document.getElementById('active-book-list');
+            list.innerHTML = '';
+            myBooks.forEach(b => {
+                list.innerHTML += `<div style="font-size:12px; margin-bottom:5px; background:#222; padding:5px; display:flex; justify-content:space-between;">
+                    ${b.series} #${b.vol} <button onclick="deleteBook(${b.id})" style="background:red; color:white; border:none;">X</button>
+                </div>`;
+            });
         }
 
         function deleteBook(id) {
@@ -182,64 +179,54 @@
             saveAndRender();
         }
 
-        function renderBookList() {
-            const list = document.getElementById('active-book-list');
-            list.innerHTML = '';
-            myBooks.sort((a,b) => a.series.localeCompare(b.series) || a.vol - b.vol);
-            myBooks.forEach(b => {
-                list.innerHTML += `<div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; background:#252525; padding:4px;">
-                    <span>${b.series} #${b.vol}</span>
-                    <button onclick="deleteBook(${b.id})" style="background:red; color:white; border:none; cursor:pointer;">X</button>
-                </div>`;
-            });
-        }
-
         function generateBackupCode() {
-            const dataStr = JSON.stringify(myBooks);
-            const base64 = btoa(encodeURIComponent(dataStr).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
-            document.getElementById('backupText').value = base64;
-            navigator.clipboard.writeText(base64);
+            const data = btoa(encodeURIComponent(JSON.stringify(myBooks)));
+            document.getElementById('backupText').value = data;
+            navigator.clipboard.writeText(data);
             alert("Backup copiado!");
         }
 
         function restoreBackupCode() {
-            const input = document.getElementById('backupText').value.trim();
+            const code = document.getElementById('backupText').value;
             try {
-                const decoded = decodeURIComponent(atob(input).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-                myBooks = JSON.parse(decoded);
+                myBooks = JSON.parse(decodeURIComponent(atob(code)));
                 saveAndRender();
-                alert("Backup restaurado!");
-            } catch (e) { alert("Código inválido!"); }
+                alert("Restaurado!");
+            } catch(e) { alert("Erro no backup"); }
         }
 
         function renderShelf() {
-            const rows = document.querySelectorAll('.shelf-row');
-            rows.forEach(r => r.innerHTML = '');
-            const rowWidth = rows[0].offsetWidth - 25; 
+            const container = document.getElementById('bookshelf');
+            container.innerHTML = ''; // Limpa tudo para reconstruir
+            
+            // Criamos 5 prateleiras iniciais
+            for(let i=0; i<5; i++) {
+                const row = document.createElement('div');
+                row.className = 'shelf-row';
+                container.appendChild(row);
+            }
 
+            const rows = document.querySelectorAll('.shelf-row');
+            const rowWidth = container.offsetWidth - 30;
             myBooks.sort((a,b) => a.series.localeCompare(b.series) || a.vol - b.vol);
 
             let currentRow = 0;
-            let currentWidthUsed = 0;
+            let currentWidth = 0;
 
             myBooks.forEach(book => {
                 const wPx = book.w_cm * PIXELS_PER_CM;
-                const hPx = book.h_cm * PIXELS_PER_CM;
-
-                if (currentWidthUsed + wPx > rowWidth) {
+                if(currentWidth + wPx > rowWidth) {
                     currentRow++;
-                    currentWidthUsed = 0;
+                    currentWidth = 0;
                 }
-
-                if (rows[currentRow]) {
-                    const bookEl = document.createElement(book.link ? 'a' : 'div');
-                    if(book.link) { bookEl.href = book.link; bookEl.target = '_blank'; }
-                    bookEl.className = book.link ? 'book-link' : 'book';
-                    bookEl.style.backgroundImage = `url('${book.url.replace(/\s/g, '%20')}')`;
-                    bookEl.style.height = `${hPx}px`;
-                    bookEl.style.width = `${wPx}px`;
-                    rows[currentRow].appendChild(bookEl);
-                    currentWidthUsed += wPx + 2; 
+                if(rows[currentRow]) {
+                    const el = document.createElement('div');
+                    el.className = 'book';
+                    el.style.backgroundImage = `url('${book.url}')`;
+                    el.style.height = `${book.h_cm * PIXELS_PER_CM}px`;
+                    el.style.width = `${wPx}px`;
+                    rows[currentRow].appendChild(el);
+                    currentWidth += wPx + 2;
                 }
             });
         }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <title>Estante Widget - Página B (Notion Optimized)</title>
+    <title>Estante Widget - Página B (Responsiva)</title>
     <style>
         /* --- VARIÁVEIS DE COR --- */
         :root {
@@ -33,7 +33,7 @@
                 --shelf-gradient-start: #050505;
                 --shelf-gradient-end: #161616;
                 --shelf-shadow-top: rgba(0,0,0,0.2);
-                --text-color: #1a8a1a;
+                --text-color: #1a1a1a;
                 --panel-bg: #ffffff;
                 --panel-border: #d4d4d4;
                 --input-bg: #f5f5f5;
@@ -47,22 +47,23 @@
             }
         }
 
-        /* --- ESTILO GERAL --- */
+        /* --- ESTILO GERAL (AJUSTADO PARA ELIMINAR ROLAGEM) --- */
         html, body {
             margin: 0;
             padding: 0;
             background-color: transparent !important;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--text-color);
-            overflow: hidden;
-            height: 100vh;
+            overflow: hidden !important; /* Remove barras de rolagem */
+            height: 100%;
+            width: 100%;
         }
 
         /* O MÓVEL */
         .furniture-wrapper {
-            width: 95%;
+            width: 100%;
             max-width: 420px;
-            margin: 10px auto 0 auto;
+            margin: 0 auto; /* Removido margin-top para não "empurrar" para fora da tela */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -80,6 +81,7 @@
             flex-direction: column;
             position: relative;
             box-sizing: border-box;
+            margin-top: 25px; /* Espaço interno para a moldura decorativa do topo */
         }
 
         .bookshelf-container::before {
@@ -100,7 +102,7 @@
             border-bottom: 12px solid var(--shelf-divider);
             display: flex;
             align-items: flex-end;
-            padding: 0 10px;
+            padding: 0 3px; /* Reduzido de 10px para 3px conforme solicitado */
             background: linear-gradient(to bottom, var(--shelf-gradient-start), var(--shelf-gradient-end));
             position: relative;
             overflow: hidden;
@@ -185,35 +187,20 @@
             border: 1px solid var(--tooltip-border);
         }
 
-        /* PAINEL DE CADASTRO - MODO MODAL COMPACTO */
+        /* PAINEL DE CADASTRO */
         #admin-panel {
             display: none;
             background: var(--panel-bg);
             padding: 15px;
-            border: 2px solid var(--panel-border);
-            border-radius: 8px;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 100;
-            max-width: 90%;
-            width: 400px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-        }
-
-        /* Overlay escuro atrás do modal */
-        #panel-overlay {
-            display: none;
+            border-bottom: 2px solid var(--panel-border);
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 99;
+            z-index: 100;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
         .input-group {
@@ -247,32 +234,15 @@
             color: white;
         }
 
-        .btn-add {
-            background-color: #388E3C;
-        }
-
-        .btn-close {
-            background-color: #D32F2F;
-        }
-
-        .btn-gen {
-            background-color: #2196F3;
-            width: 100%;
-            margin-top: 5px;
-        }
-
-        .btn-load {
-            background-color: #FF9800;
-            width: 100%;
-            margin-top: 5px;
-        }
+        .btn-add { background-color: #388E3C; }
+        .btn-close { background-color: #D32F2F; }
+        .btn-gen { background-color: #2196F3; width: 100%; margin-top: 5px; }
+        .btn-load { background-color: #FF9800; width: 100%; margin-top: 5px; }
 
         #book-list-container {
             margin-top: 20px;
             border-top: 1px solid var(--panel-border);
             padding-top: 10px;
-            max-height: 200px;
-            overflow-y: auto;
         }
 
         .list-item {
@@ -298,12 +268,6 @@
             font-weight: bold;
         }
 
-        #backup-area {
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px dashed var(--input-border);
-        }
-
         textarea {
             width: 100%;
             height: 60px;
@@ -327,30 +291,13 @@
             text-align: center;
         }
 
-        .status-success {
-            background: #1b5e20;
-            color: #fff;
-        }
+        .status-success { background: #1b5e20; color: #fff; }
+        .status-error { background: #b71c1c; color: #fff; }
 
-        .status-error {
-            background: #b71c1c;
-            color: #fff;
-        }
-
-        h3, h4 {
-            color: var(--text-color);
-            opacity: 0.8;
-        }
-
-        label {
-            color: var(--text-color);
-            opacity: 0.7;
-        }
+        h3, h4, label { color: var(--text-color); opacity: 0.8; }
     </style>
 </head>
 <body>
-
-    <div id="panel-overlay" onclick="togglePanel()"></div>
 
     <div id="admin-panel">
         <h3 style="margin: 0 0 10px 0; font-size: 16px;">Gerenciar Estante B (Modo CM)</h3>
@@ -367,8 +314,8 @@
         </div>
 
         <div class="input-group">
-            <input type="number" id="bookHeightCm" class="input-mini" placeholder="Alt (cm)" value="19" step="0.1" title="Altura em CM">
-            <input type="number" id="bookWidthCm" class="input-mini" placeholder="Esp (cm)" value="1.5" step="0.1" title="Espessura em CM">
+            <input type="number" id="bookHeightCm" class="input-mini" placeholder="Alt (cm)" value="19" step="0.1">
+            <input type="number" id="bookWidthCm" class="input-mini" placeholder="Esp (cm)" value="1.5" step="0.1">
             
             <button class="action-btn btn-add" onclick="addBook()">Adicionar</button>
             <button class="action-btn btn-close" onclick="togglePanel()">Fechar</button>
@@ -379,7 +326,7 @@
             <div id="active-book-list"></div>
         </div>
 
-        <div id="backup-area">
+        <div id="backup-area" style="margin-top: 15px; border-top: 1px dashed var(--input-border); padding-top: 10px;">
             <label style="font-size: 11px;">BACKUP / RESTAURAÇÃO:</label>
             <textarea id="backupText" placeholder="Copie o código gerado aqui..."></textarea>
             <button class="action-btn btn-gen" onclick="generateBackupCode()">Gerar Código (Copiar)</button>
@@ -417,16 +364,8 @@
 
         function togglePanel() {
             const panel = document.getElementById('admin-panel');
-            const overlay = document.getElementById('panel-overlay');
-            
-            if (panel.style.display === 'block') {
-                panel.style.display = 'none';
-                overlay.style.display = 'none';
-            } else {
-                panel.style.display = 'block';
-                overlay.style.display = 'block';
-                renderBookList();
-            }
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            renderBookList();
         }
 
         function saveAndRender() {
@@ -447,25 +386,15 @@
                 showStatus("Preciso do Nome e da URL da Imagem!", true);
                 return;
             }
-            
-            if (link && !link.startsWith('http')) {
-                link = 'https://' + link;
-            }
+            if (link && !link.startsWith('http')) link = 'https://' + link;
 
             myBooks.push({
-                series: series,
-                vol: vol,
-                url: url,
-                link: link,
-                h_cm: h_cm,
-                w_cm: w_cm,
-                id: Date.now()
+                series: series, vol: vol, url: url, link: link,
+                h_cm: h_cm, w_cm: w_cm, id: Date.now()
             });
             
             saveAndRender();
             showStatus("Livro Adicionado!", false);
-            
-            // Facilita cadastrar sequências
             document.getElementById('volNumber').value = vol + 1;
             document.getElementById('imgUrl').value = '';
             document.getElementById('pageLink').value = '';
@@ -474,31 +403,22 @@
         function deleteBook(id) {
             myBooks = myBooks.filter(b => b.id !== id);
             saveAndRender();
-            showStatus("Livro removido.", false);
         }
 
         function renderBookList() {
             const list = document.getElementById('active-book-list');
             list.innerHTML = '';
-            
-            let sortedBooks = [...myBooks].sort((a, b) => {
-                if (a.series.toLowerCase() < b.series.toLowerCase()) return -1;
-                if (a.series.toLowerCase() > b.series.toLowerCase()) return 1;
-                return a.vol - b.vol;
-            });
+            let sortedBooks = [...myBooks].sort((a, b) => a.series.localeCompare(b.series) || a.vol - b.vol);
 
             if (sortedBooks.length === 0) {
-                list.innerHTML = '<div style="color:#555; font-size:11px; text-align:center;">Nenhum livro cadastrado na Estante B.</div>';
+                list.innerHTML = '<div style="color:#555; font-size:11px; text-align:center;">Vazio.</div>';
                 return;
             }
 
             sortedBooks.forEach(b => {
                 const item = document.createElement('div');
                 item.className = 'list-item';
-                item.innerHTML = `
-                    <span>${b.series} #${b.vol}</span>
-                    <button class="btn-trash" onclick="deleteBook(${b.id})" title="Excluir">X</button>
-                `;
+                item.innerHTML = `<span>${b.series} #${b.vol}</span><button class="btn-trash" onclick="deleteBook(${b.id})">X</button>`;
                 list.appendChild(item);
             });
         }
@@ -509,43 +429,21 @@
             const textArea = document.getElementById('backupText');
             textArea.value = base64;
             textArea.select();
-            
-            try {
-                navigator.clipboard.writeText(base64);
-                showStatus("Copiado! Cole no bloco de notas.", false);
-            } catch (err) {
-                try {
-                    document.execCommand('copy');
-                    showStatus("Copiado! Cole no bloco de notas.", false);
-                } catch (err2) {
-                    showStatus("Selecione e copie manualmente.", false);
-                }
-            }
+            navigator.clipboard.writeText(base64);
+            showStatus("Copiado!", false);
         }
 
         function restoreBackupCode() {
             const textArea = document.getElementById('backupText');
             const code = textArea.value.trim();
-            
-            if (!code) {
-                showStatus("A caixa de texto está vazia.", true);
-                return;
-            }
-            
             try {
                 const decoded = decodeURIComponent(atob(code).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-                const imported = JSON.parse(decoded);
-                
-                if (Array.isArray(imported)) {
-                    myBooks = imported;
-                    saveAndRender();
-                    showStatus("Restaurado com Sucesso!", false);
-                    textArea.value = "";
-                } else {
-                    showStatus("Código inválido.", true);
-                }
+                myBooks = JSON.parse(decoded);
+                saveAndRender();
+                showStatus("Restaurado!", false);
+                textArea.value = "";
             } catch (err) {
-                showStatus("Erro no código. Verifique se copiou tudo.", true);
+                showStatus("Erro no código.", true);
             }
         }
 
@@ -553,14 +451,10 @@
             const rows = document.querySelectorAll('.shelf-row');
             rows.forEach(r => r.innerHTML = '');
             
-            // Pega a largura real da prateleira (importante para o Notion e responsividade)
-            const rowWidth = rows[0].offsetWidth - 20;
+            // AJUSTE DE LIMITE LATERAL (Reduzido para 8px)
+            const rowWidth = rows[0].offsetWidth - 8;
 
-            myBooks.sort((a, b) => {
-                if (a.series.toLowerCase() < b.series.toLowerCase()) return -1;
-                if (a.series.toLowerCase() > b.series.toLowerCase()) return 1;
-                return a.vol - b.vol;
-            });
+            myBooks.sort((a, b) => a.series.localeCompare(b.series) || a.vol - b.vol);
 
             let currentRow = 0;
             let currentWidthUsed = 0;
@@ -569,23 +463,15 @@
                 const heightPx = book.h_cm * PIXELS_PER_CM;
                 const widthPx = book.w_cm * PIXELS_PER_CM;
 
-                // Se o livro não couber na prateleira atual, pula para a próxima
                 if (currentWidthUsed + widthPx > rowWidth) {
                     currentRow++;
                     currentWidthUsed = 0;
                 }
 
                 if (rows[currentRow]) {
-                    let bookEl;
-                    if (book.link) {
-                        bookEl = document.createElement('a');
-                        bookEl.className = 'book-link';
-                        bookEl.href = book.link;
-                        bookEl.target = '_blank';
-                    } else {
-                        bookEl = document.createElement('div');
-                        bookEl.className = 'book';
-                    }
+                    let bookEl = book.link ? document.createElement('a') : document.createElement('div');
+                    bookEl.className = book.link ? 'book-link' : 'book';
+                    if (book.link) { bookEl.href = book.link; bookEl.target = '_blank'; }
 
                     bookEl.style.backgroundImage = `url('${book.url.replace(/\s/g, '%20')}')`;
                     bookEl.style.height = `${heightPx}px`;
@@ -595,15 +481,12 @@
                     bookEl.setAttribute('data-title', `${book.series}${displayVol}`);
 
                     rows[currentRow].appendChild(bookEl);
-                    currentWidthUsed += widthPx + 1; // +1 do margin
+                    currentWidthUsed += widthPx + 1;
                 }
             });
         }
 
-        // Re-renderiza se mudar o tamanho da janela
         window.addEventListener('resize', renderShelf);
-        
-        // Garante o render inicial
         setTimeout(renderShelf, 500);
     </script>
 </body>

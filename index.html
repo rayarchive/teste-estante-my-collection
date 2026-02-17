@@ -3,44 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estante Widget - Restauração Completa</title>
+    <meta name="color-scheme" content="light dark">
+    <title>Estante Widget - Página B (Compacta para Notion)</title>
     <style>
+        /* --- VARIÁVEIS DE COR --- */
         :root {
             --shelf-bg: #0d0d0d;
             --shelf-border: #1a1a1a;
             --shelf-divider: #252525;
             --shelf-gradient-start: #050505;
             --shelf-gradient-end: #161616;
+            --shelf-shadow-top: rgba(0,0,0,0.2);
+            --bg-transparent: transparent;
             --text-color: white;
             --panel-bg: #151515;
             --panel-border: #333;
             --input-bg: #222;
+            --input-border: #444;
+            --input-text: #eee;
+            --tooltip-bg: #000;
+            --list-item-bg: #1a1a1a;
         }
 
+        @media (prefers-color-scheme: light) {
+            :root {
+                --shelf-bg: #0d0d0d;
+                --shelf-border: #1a1a1a;
+                --shelf-divider: #252525;
+                --shelf-gradient-start: #050505;
+                --shelf-gradient-end: #161616;
+                --shelf-shadow-top: rgba(0,0,0,0.2);
+                --text-color: #1a1a1a;
+                --panel-bg: #ffffff;
+                --panel-border: #d4d4d4;
+                --input-bg: #f5f5f5;
+                --input-border: #d4d4d4;
+                --input-text: #1a1a1a;
+                --list-item-bg: #fafafa;
+                --tooltip-bg: #333;
+                --tooltip-border: #999;
+                --backup-text-bg: #fafafa;
+                --backup-text-color: #1a8a1a;
+            }
+        }
+
+        /* --- ESTILO GERAL --- */
         html, body {
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
             background-color: transparent !important;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--text-color);
             overflow-x: hidden;
+            overflow-y: hidden;
         }
 
+        /* O MÓVEL */
         .furniture-wrapper {
             width: 95%;
-            margin: 30px auto 0 auto; /* Espaço para o topo aparecer */
+            max-width: 320px;
+            margin: 10px auto 0 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* O TOPO QUE VOCÊ GOSTA */
+        /* A PARTE DE CIMA (ESTANTE) */
         .bookshelf-container {
             width: 100%;
             background-color: var(--shelf-bg);
-            border: 15px solid var(--shelf-border);
+            border: 10px solid var(--shelf-border);
             border-bottom: none;
-            border-radius: 6px 6px 0 0;
-            box-shadow: 10px 10px 30px rgba(0,0,0,0.6);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 8px 8px 20px rgba(0,0,0,0.6);
             display: flex;
             flex-direction: column;
             position: relative;
@@ -50,102 +85,333 @@
         .bookshelf-container::before {
             content: '';
             position: absolute;
-            top: -25px;
-            left: -15px;
-            right: -15px;
-            height: 25px;
+            top: -18px;
+            left: -10px;
+            right: -10px;
+            height: 18px;
             background: var(--shelf-border);
-            border-radius: 4px 4px 0 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            border-radius: 3px 3px 0 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
-        /* AS PRATELEIRAS */
+        /* AS PRATELEIRAS - REDUZIDAS */
         .shelf-row {
-            height: 170px; /* Altura aumentada para as prateleiras */
-            border-bottom: 12px solid var(--shelf-divider);
+            height: 115px;
+            border-bottom: 8px solid var(--shelf-divider);
             display: flex;
             align-items: flex-end;
             padding: 0 8px;
             background: linear-gradient(to bottom, var(--shelf-gradient-start), var(--shelf-gradient-end));
             position: relative;
+            overflow: hidden;
             box-sizing: border-box;
         }
+        
+        .shelf-row:last-of-type {
+            border-bottom: none !important;
+            background: transparent !important;
+        }
 
-        /* OS PÉS (RODAPÉ) AJUSTADOS */
+        .shelf-row::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--shelf-shadow-top);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
         .shelf-footer {
-            width: 100%; /* Corrigido para não sobrar para os lados */
-            height: 55px;
+            width: calc(100% + 2px); 
+            height: 35px;
             background: var(--shelf-border);
-            border-radius: 0 0 6px 6px;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.6);
+            border-radius: 0 0 0px 0px;
+            box-shadow: 0px 0px 8px rgba(0,0,0,0.6);
             position: relative;
             margin-top: -1px; 
             z-index: 5;
         }
 
         #secret-btn {
-            position: absolute; right: 0; bottom: 0;
-            width: 60px; height: 100%;
-            opacity: 0; cursor: pointer; border: none; background: transparent;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 40px;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            border: none;
+            background: transparent;
         }
-
+        
+        /* O LIVRO */
         .book, a.book-link {
-            margin-right: 2px;
-            background-size: 100% 100%;
+            margin-right: 1px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             border-radius: 1px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.9);
+            box-shadow: 2px 0 4px rgba(0,0,0,0.9);
             transition: transform 0.2s;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
             display: block;
             text-decoration: none;
         }
-        .book:hover, a.book-link:hover { transform: scale(1.05) translateY(-5px); z-index: 10; }
 
-        /* PAINEL ADMINISTRATIVO */
-        #admin-panel { display: none; background: var(--panel-bg); padding: 15px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; max-height: 80vh; overflow-y: auto; border-bottom: 2px solid var(--panel-border); }
-        .input-group { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-        input, textarea { padding: 8px; background: var(--input-bg); border: 1px solid #444; color: white; border-radius: 4px; width: 100%; box-sizing: border-box; }
-        .btn-action { padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; }
+        .book:hover, a.book-link:hover {
+            transform: scale(1.05) translateY(-4px);
+            z-index: 10;
+            box-shadow: 0 0 12px rgba(255,255,255,0.1);
+        }
+
+        .book:hover::after, a.book-link:hover::after {
+            content: attr(data-title);
+            position: absolute;
+            bottom: 105%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--tooltip-bg);
+            color: #fff;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-size: 9px;
+            white-space: nowrap;
+            z-index: 20;
+            border: 1px solid var(--tooltip-border);
+        }
+
+        /* PAINEL DE CADASTRO - COMPACTO */
+        #admin-panel {
+            display: none;
+            background: var(--panel-bg);
+            padding: 10px;
+            border-bottom: 2px solid var(--panel-border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        input {
+            padding: 6px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: var(--input-text);
+            border-radius: 3px;
+            box-sizing: border-box;
+            font-size: 12px;
+        }
+
+        .input-mini {
+            width: 70px;
+        }
+
+        button.action-btn {
+            padding: 6px 12px;
+            cursor: pointer;
+            border: none;
+            border-radius: 3px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 10px;
+            color: white;
+        }
+
+        .btn-add {
+            background-color: #388E3C;
+        }
+
+        .btn-close {
+            background-color: #D32F2F;
+        }
+
+        .btn-gen {
+            background-color: #2196F3;
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        .btn-load {
+            background-color: #FF9800;
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        #book-list-container {
+            margin-top: 15px;
+            border-top: 1px solid var(--panel-border);
+            padding-top: 8px;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--list-item-bg);
+            padding: 4px 8px;
+            margin-bottom: 3px;
+            border-radius: 3px;
+            border: 1px solid var(--panel-border);
+            font-size: 11px;
+        }
+
+        .btn-trash {
+            background: #b71c1c;
+            color: white;
+            border: none;
+            border-radius: 2px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        #backup-area {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--input-border);
+        }
+
+        textarea {
+            width: 100%;
+            height: 50px;
+            background: var(--backup-text-bg);
+            color: var(--backup-text-color);
+            font-family: monospace;
+            font-size: 9px;
+            border: 1px solid var(--panel-border);
+            margin-top: 4px;
+            padding: 4px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        #status-msg {
+            margin: 8px 0;
+            padding: 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            display: none;
+            text-align: center;
+        }
+
+        .status-success {
+            background: #1b5e20;
+            color: #fff;
+        }
+
+        .status-error {
+            background: #b71c1c;
+            color: #fff;
+        }
+
+        h3, h4 {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+        }
+
+        h4 {
+            margin: 0 0 8px 0;
+            font-size: 11px;
+        }
+
+        label {
+            color: var(--text-color);
+            opacity: 0.7;
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
 
     <div id="admin-panel">
-        <h3>Configurações da Estante</h3>
+        <h3>Gerenciar Estante B (Modo CM)</h3>
+        <div id="status-msg"></div>
+
         <div class="input-group">
-            <input type="text" id="seriesName" placeholder="Série">
-            <input type="number" id="volNumber" placeholder="Vol" style="width: 70px;">
+            <input type="text" id="seriesName" placeholder="Nome da Série" style="flex: 2;">
+            <input type="number" id="volNumber" placeholder="Vol." style="width: 50px;">
         </div>
+
         <div class="input-group">
-            <input type="text" id="imgUrl" placeholder="URL da Imagem">
+            <input type="text" id="imgUrl" placeholder="URL da Imagem (Pública)" style="flex: 2;">
+            <input type="text" id="pageLink" placeholder="Link da Pág. (Opcional)" style="flex: 2;">
         </div>
+
         <div class="input-group">
-            <button class="btn-action" style="background:#388E3C; flex: 1;" onclick="addBook()">Adicionar</button>
-            <button class="btn-action" style="background:#666;" onclick="togglePanel()">Fechar</button>
+            <input type="number" id="bookHeightCm" class="input-mini" placeholder="Alt (cm)" value="19" step="0.1" title="Altura em CM">
+            <input type="number" id="bookWidthCm" class="input-mini" placeholder="Esp (cm)" value="1.5" step="0.1" title="Espessura em CM">
+            
+            <button class="action-btn btn-add" onclick="addBook()">Adicionar</button>
+            <button class="action-btn btn-close" onclick="togglePanel()">Fechar</button>
         </div>
-        <div id="active-book-list"></div>
-        <div style="margin-top:20px; border-top: 1px solid #444; padding-top:10px;">
-            <textarea id="backupText" placeholder="Código de backup..."></textarea>
-            <button class="btn-action" style="background:#2196F3; width:100%; margin-top:5px;" onclick="generateBackupCode()">Gerar Backup</button>
-            <button class="btn-action" style="background:#FF9800; width:100%; margin-top:5px;" onclick="restoreBackupCode()">Restaurar Backup</button>
+
+        <div id="book-list-container">
+            <h4>LIVROS CADASTRADOS:</h4>
+            <div id="active-book-list"></div>
+        </div>
+
+        <div id="backup-area">
+            <label>BACKUP / RESTAURAÇÃO:</label>
+            <textarea id="backupText" placeholder="Copie o código gerado aqui..."></textarea>
+            <button class="action-btn btn-gen" onclick="generateBackupCode()">Gerar Código (Copiar)</button>
+            <button class="action-btn btn-load" onclick="restoreBackupCode()">Restaurar (Colar)</button>
         </div>
     </div>
 
     <div class="furniture-wrapper">
         <div class="bookshelf-container" id="bookshelf">
-            </div>
+            <div class="shelf-row" id="shelf-1"></div>
+            <div class="shelf-row" id="shelf-2"></div>
+            <div class="shelf-row" id="shelf-3"></div>
+            <div class="shelf-row" id="shelf-4"></div>
+            <div class="shelf-row" id="shelf-5"></div>
+            <div class="shelf-row" id="shelf-6"></div>
+        </div>
+        
         <div class="shelf-footer">
-            <button id="secret-btn" onclick="togglePanel()"></button>
+            <button id="secret-btn" onclick="togglePanel()" title="Configurações"></button>
         </div>
     </div>
 
     <script>
         const STORAGE_KEY = 'myMangaShelf_PAGINA_B';
         let myBooks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-        const PIXELS_PER_CM = 5.5; 
+        const PIXELS_PER_CM = 3.8; // Ajustado para versão compacta
+
+        function showStatus(text, isError = false) {
+            const el = document.getElementById('status-msg');
+            el.innerText = text;
+            el.className = isError ? 'status-error' : 'status-success';
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 3000);
+        }
 
         function togglePanel() {
-            const p = document.getElementById('admin-panel');
-            p.style.display = p.style.display === 'block' ? 'none' : 'block';
+            const panel = document.getElementById('admin-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
             renderBookList();
         }
 
@@ -156,82 +422,174 @@
         }
 
         function addBook() {
-            const series = document.getElementById('seriesName').value;
-            const vol = document.getElementById('volNumber').value;
-            const url = document.getElementById('imgUrl').value;
-            if(!series || !url) return;
-            myBooks.push({series, vol, url, h_cm:19.5, w_cm:1.5, id:Date.now()});
-            saveAndRender();
-        }
+            const series = document.getElementById('seriesName').value.trim();
+            const vol = parseInt(document.getElementById('volNumber').value) || 0;
+            const url = document.getElementById('imgUrl').value.trim();
+            let link = document.getElementById('pageLink').value.trim();
+            const h_cm = parseFloat(document.getElementById('bookHeightCm').value) || 19;
+            const w_cm = parseFloat(document.getElementById('bookWidthCm').value) || 1.5;
+            
+            if (!series || !url) {
+                showStatus("Preciso do Nome e da URL da Imagem!", true);
+                return;
+            }
+            
+            if (link && !link.startsWith('http')) {
+                link = 'https://' + link;
+            }
 
-        function renderBookList() {
-            const list = document.getElementById('active-book-list');
-            list.innerHTML = '';
-            myBooks.forEach(b => {
-                list.innerHTML += `<div style="font-size:12px; margin-bottom:5px; background:#222; padding:5px; display:flex; justify-content:space-between;">
-                    ${b.series} #${b.vol} <button onclick="deleteBook(${b.id})" style="background:red; color:white; border:none;">X</button>
-                </div>`;
+            myBooks.push({
+                series: series,
+                vol: vol,
+                url: url,
+                link: link,
+                h_cm: h_cm,
+                w_cm: w_cm,
+                id: Date.now()
             });
+            
+            saveAndRender();
+            showStatus("Livro Adicionado!", false);
+            
+            // Facilita cadastrar sequências
+            document.getElementById('volNumber').value = vol + 1;
+            document.getElementById('imgUrl').value = '';
+            document.getElementById('pageLink').value = '';
         }
 
         function deleteBook(id) {
             myBooks = myBooks.filter(b => b.id !== id);
             saveAndRender();
+            showStatus("Livro removido.", false);
+        }
+
+        function renderBookList() {
+            const list = document.getElementById('active-book-list');
+            list.innerHTML = '';
+            
+            let sortedBooks = [...myBooks].sort((a, b) => {
+                if (a.series.toLowerCase() < b.series.toLowerCase()) return -1;
+                if (a.series.toLowerCase() > b.series.toLowerCase()) return 1;
+                return a.vol - b.vol;
+            });
+
+            if (sortedBooks.length === 0) {
+                list.innerHTML = '<div style="color:#555; font-size:10px; text-align:center;">Nenhum livro cadastrado na Estante B.</div>';
+                return;
+            }
+
+            sortedBooks.forEach(b => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.innerHTML = `
+                    <span>${b.series} #${b.vol}</span>
+                    <button class="btn-trash" onclick="deleteBook(${b.id})" title="Excluir">X</button>
+                `;
+                list.appendChild(item);
+            });
         }
 
         function generateBackupCode() {
-            const data = btoa(encodeURIComponent(JSON.stringify(myBooks)));
-            document.getElementById('backupText').value = data;
-            navigator.clipboard.writeText(data);
-            alert("Backup copiado!");
+            const dataStr = JSON.stringify(myBooks);
+            const base64 = btoa(encodeURIComponent(dataStr).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
+            const textArea = document.getElementById('backupText');
+            textArea.value = base64;
+            textArea.select();
+            
+            try {
+                navigator.clipboard.writeText(base64);
+                showStatus("Copiado! Cole no bloco de notas.", false);
+            } catch (err) {
+                try {
+                    document.execCommand('copy');
+                    showStatus("Copiado! Cole no bloco de notas.", false);
+                } catch (err2) {
+                    showStatus("Selecione e copie manualmente.", false);
+                }
+            }
         }
 
         function restoreBackupCode() {
-            const code = document.getElementById('backupText').value;
+            const textArea = document.getElementById('backupText');
+            const code = textArea.value.trim();
+            
+            if (!code) {
+                showStatus("A caixa de texto está vazia.", true);
+                return;
+            }
+            
             try {
-                myBooks = JSON.parse(decodeURIComponent(atob(code)));
-                saveAndRender();
-                alert("Restaurado!");
-            } catch(e) { alert("Erro no backup"); }
+                const decoded = decodeURIComponent(atob(code).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+                const imported = JSON.parse(decoded);
+                
+                if (Array.isArray(imported)) {
+                    myBooks = imported;
+                    saveAndRender();
+                    showStatus("Restaurado com Sucesso!", false);
+                    textArea.value = "";
+                } else {
+                    showStatus("Código inválido.", true);
+                }
+            } catch (err) {
+                showStatus("Erro no código. Verifique se copiou tudo.", true);
+            }
         }
 
         function renderShelf() {
-            const container = document.getElementById('bookshelf');
-            container.innerHTML = ''; // Limpa tudo para reconstruir
-            
-            // Criamos 5 prateleiras iniciais
-            for(let i=0; i<5; i++) {
-                const row = document.createElement('div');
-                row.className = 'shelf-row';
-                container.appendChild(row);
-            }
-
             const rows = document.querySelectorAll('.shelf-row');
-            const rowWidth = container.offsetWidth - 30;
-            myBooks.sort((a,b) => a.series.localeCompare(b.series) || a.vol - b.vol);
+            rows.forEach(r => r.innerHTML = '');
+            
+            // Pega a largura real da prateleira (importante para o Notion e responsividade)
+            const rowWidth = rows[0].offsetWidth - 16;
+
+            myBooks.sort((a, b) => {
+                if (a.series.toLowerCase() < b.series.toLowerCase()) return -1;
+                if (a.series.toLowerCase() > b.series.toLowerCase()) return 1;
+                return a.vol - b.vol;
+            });
 
             let currentRow = 0;
-            let currentWidth = 0;
+            let currentWidthUsed = 0;
 
             myBooks.forEach(book => {
-                const wPx = book.w_cm * PIXELS_PER_CM;
-                if(currentWidth + wPx > rowWidth) {
+                const heightPx = book.h_cm * PIXELS_PER_CM;
+                const widthPx = book.w_cm * PIXELS_PER_CM;
+
+                // Se o livro não couber na prateleira atual, pula para a próxima
+                if (currentWidthUsed + widthPx > rowWidth) {
                     currentRow++;
-                    currentWidth = 0;
+                    currentWidthUsed = 0;
                 }
-                if(rows[currentRow]) {
-                    const el = document.createElement('div');
-                    el.className = 'book';
-                    el.style.backgroundImage = `url('${book.url}')`;
-                    el.style.height = `${book.h_cm * PIXELS_PER_CM}px`;
-                    el.style.width = `${wPx}px`;
-                    rows[currentRow].appendChild(el);
-                    currentWidth += wPx + 2;
+
+                if (rows[currentRow]) {
+                    let bookEl;
+                    if (book.link) {
+                        bookEl = document.createElement('a');
+                        bookEl.className = 'book-link';
+                        bookEl.href = book.link;
+                        bookEl.target = '_blank';
+                    } else {
+                        bookEl = document.createElement('div');
+                        bookEl.className = 'book';
+                    }
+
+                    bookEl.style.backgroundImage = `url('${book.url.replace(/\s/g, '%20')}')`;
+                    bookEl.style.height = `${heightPx}px`;
+                    bookEl.style.width = `${widthPx}px`;
+                    
+                    const displayVol = book.vol > 0 ? ` #${book.vol}` : '';
+                    bookEl.setAttribute('data-title', `${book.series}${displayVol}`);
+
+                    rows[currentRow].appendChild(bookEl);
+                    currentWidthUsed += widthPx + 1; // +1 do margin
                 }
             });
         }
 
+        // Re-renderiza se mudar o tamanho da janela
         window.addEventListener('resize', renderShelf);
+        
+        // Garante o render inicial
         setTimeout(renderShelf, 500);
     </script>
 </body>

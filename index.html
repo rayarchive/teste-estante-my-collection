@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="light dark">
-    <title>Estante Widget - Página B (Compacta para Notion)</title>
+    <title>Estante Widget - Página B (Notion Optimized)</title>
     <style>
         /* --- VARIÁVEIS DE COR --- */
         :root {
@@ -33,7 +33,7 @@
                 --shelf-gradient-start: #050505;
                 --shelf-gradient-end: #161616;
                 --shelf-shadow-top: rgba(0,0,0,0.2);
-                --text-color: #1a1a1a;
+                --text-color: #1a8a1a;
                 --panel-bg: #ffffff;
                 --panel-border: #d4d4d4;
                 --input-bg: #f5f5f5;
@@ -54,14 +54,14 @@
             background-color: transparent !important;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: var(--text-color);
-            overflow-x: hidden;
-            overflow-y: hidden;
+            overflow: hidden;
+            height: 100vh;
         }
 
         /* O MÓVEL */
         .furniture-wrapper {
             width: 95%;
-            max-width: 320px;
+            max-width: 420px;
             margin: 10px auto 0 auto;
             display: flex;
             flex-direction: column;
@@ -72,10 +72,10 @@
         .bookshelf-container {
             width: 100%;
             background-color: var(--shelf-bg);
-            border: 10px solid var(--shelf-border);
+            border: 15px solid var(--shelf-border);
             border-bottom: none;
-            border-radius: 4px 4px 0 0;
-            box-shadow: 8px 8px 20px rgba(0,0,0,0.6);
+            border-radius: 6px 6px 0 0;
+            box-shadow: 10px 10px 30px rgba(0,0,0,0.6);
             display: flex;
             flex-direction: column;
             position: relative;
@@ -85,22 +85,22 @@
         .bookshelf-container::before {
             content: '';
             position: absolute;
-            top: -18px;
-            left: -10px;
-            right: -10px;
-            height: 18px;
+            top: -25px;
+            left: -15px;
+            right: -15px;
+            height: 25px;
             background: var(--shelf-border);
-            border-radius: 3px 3px 0 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
-        /* AS PRATELEIRAS - REDUZIDAS */
+        /* AS PRATELEIRAS */
         .shelf-row {
-            height: 115px;
-            border-bottom: 8px solid var(--shelf-divider);
+            height: 155px;
+            border-bottom: 12px solid var(--shelf-divider);
             display: flex;
             align-items: flex-end;
-            padding: 0 8px;
+            padding: 0 10px;
             background: linear-gradient(to bottom, var(--shelf-gradient-start), var(--shelf-gradient-end));
             position: relative;
             overflow: hidden;
@@ -118,7 +118,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 6px;
+            height: 10px;
             background: var(--shelf-shadow-top);
             z-index: 1;
             pointer-events: none;
@@ -126,10 +126,10 @@
         
         .shelf-footer {
             width: calc(100% + 2px); 
-            height: 35px;
+            height: 55px;
             background: var(--shelf-border);
             border-radius: 0 0 0px 0px;
-            box-shadow: 0px 0px 8px rgba(0,0,0,0.6);
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.6);
             position: relative;
             margin-top: -1px; 
             z-index: 5;
@@ -139,7 +139,7 @@
             position: absolute;
             right: 0;
             bottom: 0;
-            width: 40px;
+            width: 50px;
             height: 100%;
             opacity: 0;
             cursor: pointer;
@@ -154,7 +154,7 @@
             background-position: center;
             background-repeat: no-repeat;
             border-radius: 1px;
-            box-shadow: 2px 0 4px rgba(0,0,0,0.9);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.9);
             transition: transform 0.2s;
             cursor: pointer;
             position: relative;
@@ -164,9 +164,9 @@
         }
 
         .book:hover, a.book-link:hover {
-            transform: scale(1.05) translateY(-4px);
+            transform: scale(1.05) translateY(-5px);
             z-index: 10;
-            box-shadow: 0 0 12px rgba(255,255,255,0.1);
+            box-shadow: 0 0 15px rgba(255,255,255,0.1);
         }
 
         .book:hover::after, a.book-link:hover::after {
@@ -177,59 +177,73 @@
             transform: translateX(-50%);
             background: var(--tooltip-bg);
             color: #fff;
-            padding: 3px 6px;
-            border-radius: 3px;
-            font-size: 9px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
             white-space: nowrap;
             z-index: 20;
             border: 1px solid var(--tooltip-border);
         }
 
-        /* PAINEL DE CADASTRO - COMPACTO */
+        /* PAINEL DE CADASTRO - MODO MODAL COMPACTO */
         #admin-panel {
             display: none;
             background: var(--panel-bg);
-            padding: 10px;
-            border-bottom: 2px solid var(--panel-border);
+            padding: 15px;
+            border: 2px solid var(--panel-border);
+            border-radius: 8px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            max-width: 90%;
+            width: 400px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        /* Overlay escuro atrás do modal */
+        #panel-overlay {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            z-index: 100;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 99;
         }
 
         .input-group {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         input {
-            padding: 6px;
+            padding: 8px;
             background: var(--input-bg);
             border: 1px solid var(--input-border);
             color: var(--input-text);
-            border-radius: 3px;
+            border-radius: 4px;
             box-sizing: border-box;
-            font-size: 12px;
         }
 
         .input-mini {
-            width: 70px;
+            width: 80px;
         }
 
         button.action-btn {
-            padding: 6px 12px;
+            padding: 8px 16px;
             cursor: pointer;
             border: none;
-            border-radius: 3px;
+            border-radius: 4px;
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 10px;
+            font-size: 11px;
             color: white;
         }
 
@@ -244,19 +258,21 @@
         .btn-gen {
             background-color: #2196F3;
             width: 100%;
-            margin-top: 4px;
+            margin-top: 5px;
         }
 
         .btn-load {
             background-color: #FF9800;
             width: 100%;
-            margin-top: 4px;
+            margin-top: 5px;
         }
 
         #book-list-container {
-            margin-top: 15px;
+            margin-top: 20px;
             border-top: 1px solid var(--panel-border);
-            padding-top: 8px;
+            padding-top: 10px;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .list-item {
@@ -264,50 +280,49 @@
             justify-content: space-between;
             align-items: center;
             background: var(--list-item-bg);
-            padding: 4px 8px;
-            margin-bottom: 3px;
-            border-radius: 3px;
+            padding: 5px 10px;
+            margin-bottom: 4px;
+            border-radius: 4px;
             border: 1px solid var(--panel-border);
-            font-size: 11px;
+            font-size: 12px;
         }
 
         .btn-trash {
             background: #b71c1c;
             color: white;
             border: none;
-            border-radius: 2px;
-            width: 20px;
-            height: 20px;
+            border-radius: 3px;
+            width: 24px;
+            height: 24px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 10px;
         }
 
         #backup-area {
-            margin-top: 12px;
-            padding-top: 8px;
+            margin-top: 15px;
+            padding-top: 10px;
             border-top: 1px dashed var(--input-border);
         }
 
         textarea {
             width: 100%;
-            height: 50px;
+            height: 60px;
             background: var(--backup-text-bg);
             color: var(--backup-text-color);
             font-family: monospace;
-            font-size: 9px;
+            font-size: 10px;
             border: 1px solid var(--panel-border);
-            margin-top: 4px;
-            padding: 4px;
+            margin-top: 5px;
+            padding: 5px;
             box-sizing: border-box;
             resize: vertical;
         }
 
         #status-msg {
-            margin: 8px 0;
-            padding: 6px;
-            border-radius: 3px;
-            font-size: 11px;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
             display: none;
             text-align: center;
         }
@@ -327,27 +342,18 @@
             opacity: 0.8;
         }
 
-        h3 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-        }
-
-        h4 {
-            margin: 0 0 8px 0;
-            font-size: 11px;
-        }
-
         label {
             color: var(--text-color);
             opacity: 0.7;
-            font-size: 10px;
         }
     </style>
 </head>
 <body>
 
+    <div id="panel-overlay" onclick="togglePanel()"></div>
+
     <div id="admin-panel">
-        <h3>Gerenciar Estante B (Modo CM)</h3>
+        <h3 style="margin: 0 0 10px 0; font-size: 16px;">Gerenciar Estante B (Modo CM)</h3>
         <div id="status-msg"></div>
 
         <div class="input-group">
@@ -369,12 +375,12 @@
         </div>
 
         <div id="book-list-container">
-            <h4>LIVROS CADASTRADOS:</h4>
+            <h4 style="margin: 0 0 10px 0; font-size: 12px;">LIVROS CADASTRADOS:</h4>
             <div id="active-book-list"></div>
         </div>
 
         <div id="backup-area">
-            <label>BACKUP / RESTAURAÇÃO:</label>
+            <label style="font-size: 11px;">BACKUP / RESTAURAÇÃO:</label>
             <textarea id="backupText" placeholder="Copie o código gerado aqui..."></textarea>
             <button class="action-btn btn-gen" onclick="generateBackupCode()">Gerar Código (Copiar)</button>
             <button class="action-btn btn-load" onclick="restoreBackupCode()">Restaurar (Colar)</button>
@@ -399,7 +405,7 @@
     <script>
         const STORAGE_KEY = 'myMangaShelf_PAGINA_B';
         let myBooks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-        const PIXELS_PER_CM = 3.8; // Ajustado para versão compacta
+        const PIXELS_PER_CM = 5;
 
         function showStatus(text, isError = false) {
             const el = document.getElementById('status-msg');
@@ -411,8 +417,16 @@
 
         function togglePanel() {
             const panel = document.getElementById('admin-panel');
-            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-            renderBookList();
+            const overlay = document.getElementById('panel-overlay');
+            
+            if (panel.style.display === 'block') {
+                panel.style.display = 'none';
+                overlay.style.display = 'none';
+            } else {
+                panel.style.display = 'block';
+                overlay.style.display = 'block';
+                renderBookList();
+            }
         }
 
         function saveAndRender() {
@@ -474,7 +488,7 @@
             });
 
             if (sortedBooks.length === 0) {
-                list.innerHTML = '<div style="color:#555; font-size:10px; text-align:center;">Nenhum livro cadastrado na Estante B.</div>';
+                list.innerHTML = '<div style="color:#555; font-size:11px; text-align:center;">Nenhum livro cadastrado na Estante B.</div>';
                 return;
             }
 
@@ -540,7 +554,7 @@
             rows.forEach(r => r.innerHTML = '');
             
             // Pega a largura real da prateleira (importante para o Notion e responsividade)
-            const rowWidth = rows[0].offsetWidth - 16;
+            const rowWidth = rows[0].offsetWidth - 20;
 
             myBooks.sort((a, b) => {
                 if (a.series.toLowerCase() < b.series.toLowerCase()) return -1;
